@@ -20,7 +20,7 @@ catkin_make --only-pkg-with-deps elevator_plugin
 ```
 5. Launch the launch file using the command,
 ```
-roslaunch robot_position_plugin launch_elevator.launch
+roslaunch elevator_plugin launch_elevator.launch
 ```
 6. After Step 5, we can see gazebo is up with the lift model and a human
 7. We can see the position of the model published on `/robot_pose`
