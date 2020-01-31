@@ -25,4 +25,8 @@ roslaunch elevator_plugin launch_elevator.launch
 6. After Step 5, we can see gazebo is up with the lift model and a human
 7. We can see the position of the model published on `/robot_pose`
 8. To see the floor number, check on topic `/elevator`
-9. Move the human within the recognizable range in front of the elevator to call the lift car to current floor
+
+To make the lift car move to a particular floor, send the following command on `/elevator` topic:
+```
+rostopic pub /elevator std_msgs/String "data: '0'" -1
+```
