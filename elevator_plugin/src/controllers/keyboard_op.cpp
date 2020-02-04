@@ -87,14 +87,9 @@ class KeyboardOp
 
 		bool setControlType(char input[])
 		{
-			std::string inputStr(input);
-
-			if (boost::iequals(inputStr, "door")) {
 				type = DOOR;
 				setActiveUnits();
 				return true;
-			} 
-			return false;
 		}
 
 		void setActiveUnits()
@@ -114,15 +109,9 @@ class KeyboardOp
 			addSrv.request.group.active_units = activeList;
 			add_group_client.call(addSrv);
 
-			printDoorControls();
-
 			isGroupInitialized = true;
 		}
 
-		void printDoorControls()
-		{
-		    std::cout << "\n-----------------\nDoor Controls:\nPress 'Enter' after each input.\n'q' to quit.\n'o' to open doors\n'c' to close doors" << std::endl;
-		}
 
 	    std::vector<uint32_t> parseActiveList(char input[])
 	    {
@@ -194,7 +183,6 @@ class KeyboardOp
 		void executeDoorServices(const std_msgs::Int8::ConstPtr& msg)
 		{
 			std::cout << "Inside executeDoorServices, I heard " << msg->data << std::endl;
-			// std::string inputStr(input);
 
 			if(msg->data == 1) {
 					open_close_doors_client.call(openDoorsCall);
