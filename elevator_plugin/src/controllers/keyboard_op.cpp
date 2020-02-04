@@ -100,7 +100,6 @@ class KeyboardOp
 		void setActiveUnits()
 		{
 			char input[]="3,4";
-			// readLineInput(input);
 			std::vector<uint32_t> activeList = parseActiveList(input);
 			
 			// Delete previous group if already initialized. Note: IGNORE the warning produced during initialization about delete service failing
@@ -155,10 +154,8 @@ class KeyboardOp
 
 			char input[] = "door";
 
-			// readLineInput(input);
 			while (!setControlType(input)) {
 				std::cout << "Invalid type. Options: 'door' or 'elevator'" << std::endl;
-				readLineInput(input);
 			}
 
 			setupCallTemplates();
@@ -180,29 +177,11 @@ class KeyboardOp
 
 		}
 
-		void readLineInput(char input[30])
-		{
-			std::cin.getline(input, 30);
-
-			std::string inputStr(input);
-			if (boost::iequals(inputStr, "q")) {
-				rosNode.shutdown();				
-				std::exit(EXIT_SUCCESS);
-			}
-		}
-
 		void start()
 		{
 			initialize();
 			bool initialSetup = true;
 
-			// while (rosNode.ok())
-			// {
-				
-				// std::cout << "Before setControlType" << std::endl;
-				// readLineInput(input);
-
-				// check if the type was toggled (between 'door' & 'elevator')
 				if (initialSetup){
 					char input[] = "door";
 
@@ -210,11 +189,6 @@ class KeyboardOp
 						initialSetup = false;						
 					}
 				}
-				// std::cout << "After setControlType" << std::endl;
-
-				// executeDoorServices(input);
-			// }		
-
 		}
 
 		void executeDoorServices(const std_msgs::Int8::ConstPtr& msg)
