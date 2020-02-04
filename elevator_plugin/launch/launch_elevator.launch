@@ -1,7 +1,67 @@
+<?xml version="1.0"?>
 <launch>
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-      <arg name="world_name" value="$(find elevator_plugin)/world/elevator.world"/>
+      <!-- <arg name="world_name" value="$(find elevator_plugin)/world/hospital_elevator.world"/> -->
+      <arg name="world_name" value="$(find elevator_plugin)/world/working_model_hospital_wip.world"/>
     <!-- more default parameters can be changed here -->
   </include>
+
+  <!-- <include file="$(find elevator_plugin)/launch/empty_world.launch">
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+    <arg name="world_name" value="$(find elevator_plugin)/worlds/empty.world"/>
+  </include> -->
+
+    <!-- Model Dynamic Manager -->
+  <arg name="add_group_srv" value="/model_dynamics_manager/add_control_group"/>
+
+  <node pkg="elevator_plugin" type="dynamics_manager" name="dynamics_manager" output="screen"/>
+
+
+  <!-- Flip Door Left -->
+
+  <!-- <param name="spawn_door_1" command="$(find xacro)/xacro.py $(find elevator_plugin)/models/flip_door_right.sdf" />
+
+  <node pkg="gazebo_ros" type="spawn_model" name="gazebo_door1" args="-sdf -param spawn_door_1 -model door_1 -x -3.042358 -y 5.532777 -z 0.3" respawn="false" output="screen">
+  </node> -->
+
+  <!-- Flip Door Right -->
+
+  <!-- <param name="spawn_door_2" command="$(find xacro)/xacro.py $(find elevator_plugin)/models/flip_door_left.sdf" />
+
+  <node pkg="gazebo_ros" type="spawn_model" name="gazebo_door2" args="-sdf -param spawn_door_2 -model door_2 -x -4.452335 -y 5.078486 -z 0.3" respawn="false" output="screen">
+  </node> -->
+
+  <!-- Slide Door1 Right -->
+
+  <param name="spawn_door_3" command="$(find xacro)/xacro.py $(find elevator_plugin)/models/slide_right.sdf" />
+
+  <!-- <node pkg="gazebo_ros" type="spawn_model" name="gazebo_door3" args="-sdf -param spawn_door_3 -model door_3 -x -5.728697 -y -13.045468 -z 0.3" respawn="false" output="screen"> -->
+  <node pkg="gazebo_ros" type="spawn_model" name="gazebo_door3" args="-sdf -param spawn_door_3 -model door_3 -x -12 -y 0.954532 -z 0.3" respawn="false" output="screen">
+  </node>
+
+  <!-- Slide Door1 Left -->
+
+  <param name="spawn_door_4" command="$(find xacro)/xacro.py $(find elevator_plugin)/models/slide_left.sdf" />
+  <node pkg="gazebo_ros" type="spawn_model" name="gazebo_door4" args="-sdf -param spawn_door_4 -model door_4 -x -12 -y 1.767974 -z 0.3" respawn="false" output="screen">
+  <!-- <node pkg="gazebo_ros" type="spawn_model" name="gazebo_door4" args="-sdf -param spawn_door_4 -model door_4 -x -5.728697 -y -12.232026 -z 0.3" respawn="false" output="screen"> -->
+  </node>
+
+  <!-- Slide Door2 Right -->
+
+  <!-- <param name="spawn_door_5" command="$(find xacro)/xacro.py $(find elevator_plugin)/models/slide_right.sdf" />
+
+  <node pkg="gazebo_ros" type="spawn_model" name="gazebo_door5" args="-sdf -param spawn_door_5 -model door_5 -x -20 -y 0.954532 -z 0.3" respawn="false" output="screen">
+  </node> -->
+
+  <!-- Slide Door2 Left -->
+
+  <!-- <param name="spawn_door_6" command="$(find xacro)/xacro.py $(find elevator_plugin)/models/slide_left.sdf" />
+  <node pkg="gazebo_ros" type="spawn_model" name="gazebo_door6" args="-sdf -param spawn_door_6 -model door_6 -x -20 -y 1.767974 -z 0.3" respawn="false" output="screen">
+  </node> -->
+
 </launch>
