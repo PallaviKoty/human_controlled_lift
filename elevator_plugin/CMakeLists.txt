@@ -69,9 +69,9 @@ add_executable(dynamics_manager src/controllers/dynamics_manager.cpp src/control
 add_dependencies(dynamics_manager ${PROJECT_NAME}_generate_messages_cpp)
 target_link_libraries(dynamics_manager ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES} ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${PROTOBUF_LIBRARY})
 
-add_executable(keyboard_op src/controllers/keyboard_op.cpp)
-add_dependencies(keyboard_op ${PROJECT_NAME}_generate_messages_cpp)
-target_link_libraries(keyboard_op ${catkin_LIBRARIES} ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
+add_executable(door_plugin_ros src/controllers/door_plugin_ros.cpp)
+add_dependencies(door_plugin_ros ${PROJECT_NAME}_generate_messages_cpp)
+target_link_libraries(door_plugin_ros ${catkin_LIBRARIES} ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
 
 #Plugin Libraries:
 add_library(door_plugin src/plugins/door_plugin.cc)
@@ -84,9 +84,7 @@ target_link_libraries(door_plugin ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES} ${Boos
 #############
 ## Install ##
 #############
-#############
-## Install ##
-#############
+
 install(TARGETS SimEventsPlugin 
   DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
@@ -95,39 +93,11 @@ install(TARGETS ElevatorPlugin
   DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
 
-install(TARGETS dynamics_manager keyboard_op door_plugin
+install(TARGETS dynamics_manager door_plugin_ros door_plugin
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
-
-
-
-
-
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
-
-# if (NOT GAZEBO_VERSION VERSION_LESS 6.0)
-#   catkin_package(  INCLUDE_DIRS include LIBRARIES gazebo_ros_elevator)
-# endif()
-
-
-# if (NOT GAZEBO_VERSION VERSION_LESS 6.0)
-#   add_library(gazebo_ros_elevator src/Elevator.cc)
-#   add_dependencies(gazebo_ros_elevator ${PROJECT_NAME}_gencfg)
-#   target_link_libraries(gazebo_ros_elevator ElevatorPlugin ${catkin_LIBRARIES})
-# endif()
-
-# if (NOT GAZEBO_VERSION VERSION_LESS 6.0)
-#   install(TARGETS gazebo_ros_elevator
-#     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-#     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#     )
-# endif()
 
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
