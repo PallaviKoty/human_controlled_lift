@@ -39,7 +39,7 @@
 #define DEFAULT_SLIDE_SPEED 1.0
 #define DEFAULT_FLIP_SPEED 1.57
 
-enum ControlType {DOOR, ELEVATOR};
+enum ControlType {DOOR};
 
 class KeyboardOp
 {
@@ -66,11 +66,6 @@ class KeyboardOp
 			rosNode = ros::NodeHandle("");
 
 			setupClientServices();
-			initVars();
-		}
-
-		void initVars()
-		{
 			type = DOOR;
 		}
 
@@ -187,7 +182,7 @@ class KeyboardOp
 			if(msg->data == 1) {
 					open_close_doors_client.call(openDoorsCall);
 			}
-			if(msg->data == 0) {
+			else if(msg->data == 0) {
 					open_close_doors_client.call(closeDoorsCall);
 			}
 			else{
