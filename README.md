@@ -42,5 +42,9 @@ To make the door move (open/ close), send the following command on `/door_comman
 ```
 rostopic pub /door_command std_msgs/Int8 "data: 1" -1
 ```
-
+### Personal reference:
+To move the Pioneer robot, use the following
+```
+rostopic pub -1 /pioneer2dx/cmd_vel geometry_msgs/Twist '{linear: {x: 0.0,y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}'
+```
 
