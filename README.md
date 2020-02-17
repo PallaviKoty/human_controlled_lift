@@ -22,6 +22,13 @@ catkin_make --only-pkg-with-deps elevator_plugin
 ```
 roslaunch elevator_plugin launch_elevator.launch
 ```
+ 
+Run the rosnode to get the commands from a rostopic:
+```
+rosrun elevator_plugin keyboard_op
+```
+ 
+
 6. After Step 5, we can see gazebo is up with the lift model and a human
 7. We can see the position of the model published on `/robot_pose`
 8. To see the floor number, check on topic `/elevator`
@@ -30,3 +37,14 @@ To make the lift car move to a particular floor, send the following command on `
 ```
 rostopic pub /elevator std_msgs/String "data: '0'" -1
 ```
+
+To make the door move (open/ close), send the following command on `/door_command` topic:
+```
+rostopic pub /door_command std_msgs/Int8 "data: 1" -1
+```
+### Personal reference:
+To move the Pioneer robot, use the following
+```
+rostopic pub -1 /pioneer2dx/cmd_vel geometry_msgs/Twist '{linear: {x: 0.0,y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}'
+```
+
