@@ -41,7 +41,7 @@
 
 enum ControlType {DOOR};
 
-class DoorPluginROS
+class KeyboardOp
 {
 	public:
 		ros::NodeHandle rosNode;
@@ -53,14 +53,14 @@ class DoorPluginROS
 		bool isGroupInitialized;
 		// start();
 
-		ros::Subscriber sub = rosNode.subscribe("door_command", 1000, &DoorPluginROS::executeDoorServices, this);
+		ros::Subscriber sub = rosNode.subscribe("door_command", 1000, &KeyboardOp::executeDoorServices, this);
 
 		elevator_plugin::OpenCloseDoors openDoorsCall;
 		elevator_plugin::OpenCloseDoors closeDoorsCall;
 		elevator_plugin::SetVelDoors setVelDoorsCall;
 
 	public:
-		DoorPluginROS(ros::NodeHandle &nh)
+		KeyboardOp(ros::NodeHandle &nh)
 		{
 			rosNode = nh;
 			rosNode = ros::NodeHandle("");
@@ -205,7 +205,7 @@ int main(int argc, char** argv)
 
   ros::init(argc, argv, "keyboard_op_model_dynamics_control");
   ros::NodeHandle nh;
-  DoorPluginROS controller(nh);
+  KeyboardOp controller(nh);
   
   controller.start();
   ros::spin();
