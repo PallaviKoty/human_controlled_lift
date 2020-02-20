@@ -60,317 +60,6 @@
         <kinematic>0</kinematic>
       </link>
     </model>
-    <physics type='ode'>
-      <max_step_size>0.001</max_step_size>
-      <real_time_factor>1</real_time_factor>
-      <real_time_update_rate>1000</real_time_update_rate>
-      <gravity>0 0 -9.8</gravity>
-    </physics>
-    <scene>
-      <ambient>0.4 0.4 0.4 1</ambient>
-      <background>0.7 0.7 0.7 1</background>
-      <shadows>1</shadows>
-    </scene>
-    <spherical_coordinates>
-      <surface_model>EARTH_WGS84</surface_model>
-      <latitude_deg>0</latitude_deg>
-      <longitude_deg>0</longitude_deg>
-      <elevation>0</elevation>
-      <heading_deg>0</heading_deg>
-    </spherical_coordinates>
-    <model name='pioneer2dx'>
-      <link name='chassis'>
-        <pose>0 0 0.16 0 -0 0</pose>
-        <inertial>
-          <mass>5.67</mass>
-          <inertia>
-            <ixx>0.07</ixx>
-            <iyy>0.08</iyy>
-            <izz>0.1</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-        </inertial>
-        <collision name='collision'>
-          <geometry>
-            <box>
-              <size>0.445 0.277 0.17</size>
-            </box>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <bounce/>
-            <friction>
-              <ode/>
-            </friction>
-            <contact>
-              <ode/>
-            </contact>
-          </surface>
-        </collision>
-        <collision name='castor_collision'>
-          <pose>-0.2 0 -0.12 0 -0 0</pose>
-          <geometry>
-            <sphere>
-              <radius>0.04</radius>
-            </sphere>
-          </geometry>
-          <surface>
-            <friction>
-              <ode>
-                <mu>0</mu>
-                <mu2>0</mu2>
-                <slip1>1</slip1>
-                <slip2>1</slip2>
-              </ode>
-            </friction>
-            <bounce/>
-            <contact>
-              <ode/>
-            </contact>
-          </surface>
-          <max_contacts>10</max_contacts>
-        </collision>
-        <visual name='visual'>
-          <pose>0 0 0.04 0 -0 0</pose>
-          <geometry>
-            <mesh>
-              <uri>model://pioneer2dx/meshes/chassis.dae</uri>
-            </mesh>
-          </geometry>
-        </visual>
-        <visual name='castor_visual'>
-          <pose>-0.2 0 -0.12 0 -0 0</pose>
-          <geometry>
-            <sphere>
-              <radius>0.04</radius>
-            </sphere>
-          </geometry>
-          <material>
-            <script>
-              <uri>file://media/materials/scripts/gazebo.material</uri>
-              <name>Gazebo/FlatBlack</name>
-            </script>
-          </material>
-        </visual>
-        <velocity_decay>
-          <linear>0</linear>
-          <angular>0</angular>
-        </velocity_decay>
-        <self_collide>0</self_collide>
-        <kinematic>0</kinematic>
-        <gravity>1</gravity>
-      </link>
-      <link name='right_wheel'>
-        <pose>0.1 -0.17 0.11 0 1.5707 1.5707</pose>
-        <inertial>
-          <mass>1.5</mass>
-          <inertia>
-            <ixx>0.0051</ixx>
-            <iyy>0.0051</iyy>
-            <izz>0.009</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-        </inertial>
-        <collision name='collision'>
-          <geometry>
-            <cylinder>
-              <radius>0.11</radius>
-              <length>0.05</length>
-            </cylinder>
-          </geometry>
-          <surface>
-            <friction>
-              <ode>
-                <mu>100000</mu>
-                <mu2>100000</mu2>
-                <slip1>0</slip1>
-                <slip2>0</slip2>
-              </ode>
-            </friction>
-            <bounce/>
-            <contact>
-              <ode/>
-            </contact>
-          </surface>
-          <max_contacts>10</max_contacts>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <cylinder>
-              <radius>0.11</radius>
-              <length>0.05</length>
-            </cylinder>
-          </geometry>
-          <material>
-            <script>
-              <uri>file://media/materials/scripts/gazebo.material</uri>
-              <name>Gazebo/FlatBlack</name>
-            </script>
-          </material>
-        </visual>
-        <velocity_decay>
-          <linear>0</linear>
-          <angular>0</angular>
-        </velocity_decay>
-        <self_collide>0</self_collide>
-        <kinematic>0</kinematic>
-        <gravity>1</gravity>
-      </link>
-      <link name='left_wheel'>
-        <pose>0.1 0.17 0.11 0 1.5707 1.5707</pose>
-        <inertial>
-          <mass>1.5</mass>
-          <inertia>
-            <ixx>0.0051</ixx>
-            <iyy>0.0051</iyy>
-            <izz>0.009</izz>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyz>0</iyz>
-          </inertia>
-        </inertial>
-        <collision name='collision'>
-          <geometry>
-            <cylinder>
-              <radius>0.11</radius>
-              <length>0.05</length>
-            </cylinder>
-          </geometry>
-          <surface>
-            <friction>
-              <ode>
-                <mu>100000</mu>
-                <mu2>100000</mu2>
-                <slip1>0</slip1>
-                <slip2>0</slip2>
-              </ode>
-            </friction>
-            <bounce/>
-            <contact>
-              <ode/>
-            </contact>
-          </surface>
-          <max_contacts>10</max_contacts>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <cylinder>
-              <radius>0.11</radius>
-              <length>0.05</length>
-            </cylinder>
-          </geometry>
-          <material>
-            <script>
-              <uri>file://media/materials/scripts/gazebo.material</uri>
-              <name>Gazebo/FlatBlack</name>
-            </script>
-          </material>
-        </visual>
-        <velocity_decay>
-          <linear>0</linear>
-          <angular>0</angular>
-        </velocity_decay>
-        <self_collide>0</self_collide>
-        <kinematic>0</kinematic>
-        <gravity>1</gravity>
-      </link>
-      <joint name='left_wheel_hinge' type='revolute'>
-        <pose>0 0 -0.03 0 -0 0</pose>
-        <child>left_wheel</child>
-        <parent>chassis</parent>
-        <axis>
-          <xyz>0 0 1</xyz>
-          <limit>
-            <lower>-1e+16</lower>
-            <upper>1e+16</upper>
-          </limit>
-        </axis>
-      </joint>
-      <joint name='right_wheel_hinge' type='revolute'>
-        <pose>0 0 0.03 0 -0 0</pose>
-        <child>right_wheel</child>
-        <parent>chassis</parent>
-        <axis>
-          <xyz>0 0 1</xyz>
-          <limit>
-            <lower>-1e+16</lower>
-            <upper>1e+16</upper>
-          </limit>
-        </axis>
-      </joint>
-      <!-- Replaced Gazebo's differential drive plugin with the
-           ROS-friendly variant -->
-      <!--
-      <plugin filename="libDiffDrivePlugin.so" name="diff_drive">
-        <left_joint>left_wheel_hinge</left_joint>
-        <right_joint>right_wheel_hinge</right_joint>
-        <torque>5</torque>
-      </plugin>
-      -->
-      <plugin name='differential_drive_controller'
-              filename='libgazebo_ros_diff_drive.so'>
-        <alwaysOn>true</alwaysOn>
-        <updateRate>100</updateRate>
-        <leftJoint>left_wheel_hinge</leftJoint>
-        <rightJoint>right_wheel_hinge</rightJoint>
-        <wheelSeparation>0.39</wheelSeparation>
-        <wheelDiameter>0.15</wheelDiameter>
-        <torque>5</torque>
-        <commandTopic>cmd_vel</commandTopic>
-        <odometryTopic>odom</odometryTopic>
-        <odometryFrame>odom</odometryFrame>
-        <robotBaseFrame>chassis</robotBaseFrame>
-      </plugin>
-      <pose>0 0 0 0 -0 0</pose>
-      <static>0</static>
-    </model>
-    <state world_name='default'>
-      <sim_time>85 304000000</sim_time>
-      <real_time>85 849190220</real_time>
-      <wall_time>1432260579 736436496</wall_time>
-      <model name='ground_plane'>
-        <pose>0 0 0 0 -0 0</pose>
-        <link name='link'>
-          <pose>0 0 0 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='pioneer2dx'>
-        <pose>-0.103826 0.027961 2e-06 -2e-06 -8e-06 -0.094162</pose>
-        <link name='chassis'>
-          <pose>-0.103827 0.027961 0.160002 -2e-06 -8e-06 -0.094162</pose>
-          <velocity>
-            -0.000797 0.002229 0.003363 -0.024657 -0.007301 0.0023
-          </velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-        <link name='left_wheel'>
-          <pose>0.011714 0.187806 0.110002 1.38258 1.57033 2.85912</pose>
-          <velocity>
-            -0.000816 0.001565 0.000275 -0.014307 -0.006987 0.002012
-          </velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-        <link name='right_wheel'>
-          <pose>
-            -0.020254 -0.150688 0.110002 -1.56886 1.51434 -0.092322
-          </pose>
-          <velocity>
-            -0.000347 0.001559 0.008433 -0.014387 -0.003243 0.000126
-          </velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
-    </state>
     <plugin name='elevator_event_plugin' filename='libSimEventsPlugin.so'>
       <region>
         <name>region1</name>
@@ -932,7 +621,6 @@
       <background>0.7 0.7 0.7 1</background>
       <shadows>1</shadows>
     </scene>
-    <wind/>
     <spherical_coordinates>
       <surface_model>EARTH_WGS84</surface_model>
       <latitude_deg>0</latitude_deg>
@@ -2712,7 +2400,7 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='floor0'>
+      <!-- <model name='floor0'>
         <pose frame=''>2.25 0 0.075 0 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
@@ -2721,7 +2409,7 @@
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
-      </model>
+      </model> -->
       <model name='floor1'>
         <pose frame=''>2.25 0 3.075 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -16177,11 +15865,5 @@
       <allow_auto_disable>1</allow_auto_disable>
       <pose frame=''>13.8371 43.0504 1e-05 0 -0 0</pose>
     </model>
-    <gui fullscreen='0'>
-      <camera name='user_camera'>
-        <pose>5 -5 2 0 0.275643 2.35619</pose>
-        <view_controller>orbit</view_controller>
-      </camera>
-    </gui>
   </world>
 </sdf>

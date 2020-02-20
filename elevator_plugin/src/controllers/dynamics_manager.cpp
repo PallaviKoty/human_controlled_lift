@@ -38,12 +38,17 @@
 #include <elevator_plugin/SetVelDoors.h>
 
 #define TYPE_DOOR_STR "door"
+#define TYPE_ELEVATOR_STR "elevator"
 
 #define DEFAULT_SLIDE_SPEED 1 // in m/s
 #define DEFAULT_FLIP_SPEED 1.57 // in rad/s
 
 #define STATE_OPEN true
 #define STATE_CLOSE false
+
+#define ELEV_DOOR_STATE_OPEN 1
+#define ELEV_DOOR_STATE_CLOSE 0
+#define ELEV_DOOR_STATE_FREE 2
 
 #define INDEX_NOT_FOUND -1
 
@@ -59,9 +64,10 @@ class DynamicsController
 
 		ros::NodeHandle rosNode;
 		ros::ServiceServer add_group_server, delete_group_server, list_groups_server;
-		ros::ServiceServer open_close_doors_server, set_vel_doors_server;
+		ros::ServiceServer open_close_doors_server, set_vel_doors_server, target_floor_elev_server, set_elev_props_server, open_close_elev_doors_server;
 		
 		ros::Publisher door_cmd_vel_pub, door_active_pub;
+		ros::Publisher elev_target_pub, elev_active_pub, elev_param_pub, elev_door_pub;
 
 		std::vector<ControlGroup> groups;
 
@@ -127,6 +133,57 @@ class DynamicsController
 			return true;
 		}
 
+		// bool target_floor_elev_cb(elevator_plugin::TargetFloorElev::Request &req, elevator_plugin::TargetFloorElev::Response &res)
+		// {
+		// 	if (!activateElevators(req.group_name)) {
+		// 		return false;
+		// 	}
+
+		// 	std_msgs::UInt8 elev_door_state;
+		// 	elev_door_state.data = ELEV_DOOR_STATE_FREE;
+
+		// 	std_msgs::Int32 target_floor;
+		// 	target_floor.data = req.target_floor;
+
+		// 	elev_door_pub.publish(elev_door_state);
+		// 	elev_target_pub.publish(target_floor);
+
+		// 	return true;
+		// }
+
+		// bool set_elev_props_cb(elevator_plugin::SetElevProps::Request &req, elevator_plugin::SetElevProps::Response &res)
+		// {
+		// 	if (!activateElevators(req.group_name)) {
+		// 		return false;
+		// 	}
+
+		// 	std_msgs::Float32MultiArray elev_params;
+		// 	elev_params.data.push_back(req.velocity);
+		// 	elev_params.data.push_back(req.force);
+
+		// 	elev_param_pub.publish(elev_params);
+
+		// 	return true;
+		// }
+
+		// bool open_close_elev_cb(elevator_plugin::OpenCloseElevDoors::Request &req, elevator_plugin::OpenCloseElevDoors::Response &res)
+		// {
+		// 	if (!activateElevators(req.group_name)) {
+		// 		return false;
+		// 	}
+
+		// 	std_msgs::UInt8 elev_door_state;
+
+		// 	if (req.state == STATE_OPEN) {
+		// 		elev_door_state.data = ELEV_DOOR_STATE_OPEN;
+		// 	} else {
+		// 		elev_door_state.data = ELEV_DOOR_STATE_CLOSE;
+		// 	}
+
+		// 	elev_door_pub.publish(elev_door_state);
+
+		// 	return true;
+		// }
 
 		bool activateDoors(std::string group_name)
 		{
@@ -151,6 +208,27 @@ class DynamicsController
 			return true;
 		}
 
+		// bool activateElevators(std::string group_name)
+		// {
+		// 	int groupIndex = getGroupIndex(group_name);
+
+		// 	if (groupIndex == INDEX_NOT_FOUND) {
+		// 		ROS_ERROR("Elevator Service Failed: The specified group does not exist");
+		// 		return false;
+		// 	}
+
+		// 	ControlGroup currGroup = groups.at(groupIndex);
+
+		// 	if (currGroup.getType() != ELEVATOR) {
+		// 		ROS_ERROR("Elevato Service Failed: This group type doesn't support this call");
+		// 		return false;
+		// 	}
+
+		// 	std_msgs::UInt32MultiArray active_elevs = uintVectorToStdMsgs(currGroup.getActiveUnits());
+		// 	elev_active_pub.publish(active_elevs);
+
+		// 	return true;
+		// }
 
 		void setupControlTopics()
 		{
@@ -226,6 +304,8 @@ class DynamicsController
 		{	
 			if (type_str.compare(TYPE_DOOR_STR) == 0) {
 				return DOOR;
+			} else if (type_str.compare(TYPE_ELEVATOR_STR) == 0) {
+				return ELEVATOR;
 			} else {
 				return INVALID; // invalid type in request
 			}

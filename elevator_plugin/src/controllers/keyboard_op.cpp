@@ -22,11 +22,10 @@
 #include <boost/algorithm/string.hpp>
 
 #include <ros/ros.h>
-#include <std_msgs/Int8.h>
 
-#include <elevator_plugin/ControlGroup.h>
 #include <elevator_plugin/AddGroup.h>
 #include <elevator_plugin/DeleteGroup.h>
+#include <elevator_plugin/ControlGroup.h>
 #include <elevator_plugin/ListGroups.h>
 #include <elevator_plugin/OpenCloseDoors.h>
 #include <elevator_plugin/SetVelDoors.h>
@@ -39,11 +38,11 @@
 #define DEFAULT_SLIDE_SPEED 1.0
 #define DEFAULT_FLIP_SPEED 1.57
 
-enum ControlType {DOOR};
+enum ControlType {DOOR, ELEVATOR};
 
 class KeyboardOp
 {
-	public:
+	private:
 		ros::NodeHandle rosNode;
 		ros::ServiceClient add_group_client, delete_group_client, list_groups_client;
 		ros::ServiceClient open_close_doors_client, set_vel_doors_client, target_floor_elev_client, set_elev_props_client, open_close_elev_doors_client;
@@ -51,9 +50,6 @@ class KeyboardOp
 		ControlType type;
 		std::string groupName;
 		bool isGroupInitialized;
-		// start();
-
-		ros::Subscriber sub = rosNode.subscribe("door_command", 1000, &KeyboardOp::executeDoorServices, this);
 
 		elevator_plugin::OpenCloseDoors openDoorsCall;
 		elevator_plugin::OpenCloseDoors closeDoorsCall;
@@ -66,6 +62,11 @@ class KeyboardOp
 			rosNode = ros::NodeHandle("");
 
 			setupClientServices();
+			initVars();
+		}
+
+		void initVars()
+		{
 			type = DOOR;
 		}
 
@@ -82,14 +83,23 @@ class KeyboardOp
 
 		bool setControlType(char input[])
 		{
+			std::string inputStr(input);
+
+			if (boost::iequals(inputStr, "door")) {
+				std::cout << "Control type set to 'door'" << std::endl;
 				type = DOOR;
 				setActiveUnits();
 				return true;
+			} 
+			return false;
 		}
 
 		void setActiveUnits()
 		{
-			char input[]="3,4";
+			char input[30];
+			std::cout << "Enter the reference numbers of the units you want to control. Eg: 1, 3, 4 for units one, three & four" << std::endl;
+			
+			readLineInput(input);
 			std::vector<uint32_t> activeList = parseActiveList(input);
 			
 			// Delete previous group if already initialized. Note: IGNORE the warning produced during initialization about delete service failing
@@ -100,13 +110,28 @@ class KeyboardOp
 			// Add new group with the desired units
 			elevator_plugin::AddGroup addSrv;
 			addSrv.request.group.group_name = CONTROL_GROUP_NAME;
-			addSrv.request.group.type = "door";
+			addSrv.request.group.type = type == DOOR ? "door" : "elevator";
 			addSrv.request.group.active_units = activeList;
 			add_group_client.call(addSrv);
+
+			type == DOOR ? printDoorControls() : printElevatorControls();
 
 			isGroupInitialized = true;
 		}
 
+		void printDoorControls()
+		{
+		    std::cout << "\n-----------------\nDoor Controls:\nPress 'Enter' after each input.\n'q' to quit.\n'o' to open doors\n'c' to close doors";
+		    std::cout << "\n'l' and 'value' to specify the linear velocity of a sliding door in m/s (eg 'l 10' or 'l-3.1')\n'a' and 'value' to specify angular velocity of a revolving door in radians (eg: 'a -1.57' or 'a3.14')";
+		    std::cout << "\n'0' to stop movement\n-----------------\n" << std::endl;
+		}
+
+		void printElevatorControls()
+		{
+			std::cout << "\n-----------------\nElevator Controls:";
+			std::cout << "\nPress 'Enter' after each input.\n'q' to quit.\nEg: '4' goes to the fourth floor";
+			std::cout << "\n's##' to set the lift speed (eg: s4.2 for 4.2 m/s). Default: 1.5m/s\n'f##' to set the lift force (eg: f150 for 150N). Default: 150N\n'o' to force open the doors on the current floor\n'c' to force close the doors on the current floor\nDefault floor: 'F0'\n-----------------\n" << std::endl;
+		}
 
 	    std::vector<uint32_t> parseActiveList(char input[])
 	    {
@@ -134,12 +159,15 @@ class KeyboardOp
 
 		void initialize()
 		{
+			char input[30];
 			isGroupInitialized = false;
 
-			char input[] = "door";
+			std::cout << "Enter the |type| of models you want to control: 'door' or 'elevator'" << std::endl;
 
+			readLineInput(input);
 			while (!setControlType(input)) {
 				std::cout << "Invalid type. Options: 'door' or 'elevator'" << std::endl;
+				readLineInput(input);
 			}
 
 			setupCallTemplates();
@@ -161,31 +189,95 @@ class KeyboardOp
 
 		}
 
+		void readLineInput(char input[30])
+		{
+			std::cin.getline(input, 30);
+
+			std::string inputStr(input);
+			if (boost::iequals(inputStr, "q")) {
+				rosNode.shutdown();				
+				std::exit(EXIT_SUCCESS);
+			}
+		}
+
 		void start()
 		{
 			initialize();
-			bool initialSetup = true;
+			char input[30];
 
-				if (initialSetup){
-					char input[] = "door";
+			while (rosNode.ok())
+			{
+				readLineInput(input);
 
-					if (setControlType(input)) {
-						initialSetup = false;						
-					}
+				// check if the type was toggled (between 'door' & 'elevator')
+				if (setControlType(input)) {
+					continue;
 				}
+
+				callServices(input);
+			}		
+
 		}
 
-		void executeDoorServices(const std_msgs::Int8::ConstPtr& msg)
+		void callServices(char input[])
 		{
-			ROS_INFO("I heard %d", msg->data);
+			ROS_ASSERT(type == DOOR);
 
-			if(msg->data == 1) {
+			if (type == DOOR) {
+				executeDoorServices(input);
+			}
+		}
+
+		// void executeElevatorServices(char input[])
+		// {
+		// 	std::string inputStr(input);
+
+		// 	switch(input[0]) {
+		// 		case 'o':
+		// 			open_close_elev_doors_client.call(openElevDoorsCall);
+		// 			break;
+		// 		case 'c':
+		// 			open_close_elev_doors_client.call(closeElevDoorsCall);
+		// 			break;
+		// 		case 's':
+		// 			setElevPropsCall.request.velocity = parseFloat(inputStr.substr(1));
+		// 			set_elev_props_client.call(setElevPropsCall);
+		// 			break;
+		// 		case 'f':
+		// 			setElevPropsCall.request.force = parseFloat(inputStr.substr(1));
+		// 			set_elev_props_client.call(setElevPropsCall);
+		// 			break;
+		// 		default:
+		// 			try {
+		// 				targetFloorCall.request.target_floor = std::stoi(inputStr);
+		// 				target_floor_elev_client.call(targetFloorCall);
+		// 			} catch(std::exception const & e) {
+		// 				std::cout << "Unknown command" << std::endl;
+		// 			}
+		// 	};
+		// }
+
+		void executeDoorServices(char input[])
+		{
+			std::string inputStr(input);
+
+			switch(input[0]) {
+
+				case 'o':
 					open_close_doors_client.call(openDoorsCall);
-			}
-			else if(msg->data == 0) {
+					break;
+				case 'c':
 					open_close_doors_client.call(closeDoorsCall);
-			}
-			else{
+					break;
+				case 'l':
+					setVelDoorsCall.request.lin_x = setVelDoorsCall.request.lin_y = parseFloat(inputStr.substr(1));
+					set_vel_doors_client.call(setVelDoorsCall);
+					break;
+				case 'a':
+					setVelDoorsCall.request.ang_z = parseFloat(inputStr.substr(1));
+					set_vel_doors_client.call(setVelDoorsCall);
+					break;
+				default:
 					std::cout << "Unknown command" << std::endl;
 			};
 		}
@@ -205,8 +297,7 @@ int main(int argc, char** argv)
 
   ros::init(argc, argv, "keyboard_op_model_dynamics_control");
   ros::NodeHandle nh;
+
   KeyboardOp controller(nh);
-  
   controller.start();
-  ros::spin();
 }
